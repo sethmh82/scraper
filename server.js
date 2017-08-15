@@ -1,10 +1,20 @@
 
 // DEPENDENCIES
-var express = require('express');
+var express = require("express");
+var bodyParser = require("body-parser");
+var logger = require("morgan");
+var mongoose = require("mongoose");
+var request = require("request");
+var cheerio = require("cheerio");
 var app = express();
-var bodyParser = require('body-parser');
-var cheerio = require('cheerio');
-var mongoose = require('mongoose');
+
+mongoose.Promise = Promise;
+
+// MORGAN AND BODY PARSER
+app.use(logger("dev"));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 
 // THE PUBLIC DIRECTORY
 app.use(express.static('public'));
@@ -64,7 +74,13 @@ app.get("/articles/:id", function(req, res) {
   });
 
 
-
+  // GET SAVED MONGO ARTICLES
+  app.get("/articles", function(req, res) {
+	Article.find({}, function(error, doc) {
+		// SEND ARTICLE VIA JSON
+		res.json(doc);
+	});
+  });
 
 app.listen(process.env.PORT || 3000, function() {
 	console.log('App running on port 3000');
