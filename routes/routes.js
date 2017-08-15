@@ -25,6 +25,16 @@ app.get('/scraper', function(req, res) {
 	res.send();
 });
 
+// GET ARTICLE BY ID
+app.get("/articles/:id", function(req, res) {
+	Article.findOne({ "_id": req.params.id })
+	.populate("note")
+	.exec(function(error, doc) {
+		// SEND ARTICLE VIA JSON
+		res.json(doc);
+	});
+  });
+
 
 
 module.exports = Routes;
